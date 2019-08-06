@@ -1,8 +1,7 @@
-
 const snowflake = require('snowflake-sdk');
 const logger = require('../config/logger.js');
-let sf_count =0;
-let sf_query_count =0;
+let sf_count = 0;
+let sf_query_count = 0;
 
 const snowflakeDBConnection = async (dboptions) => {
   const snowConnectionObj = snowflake.createConnection(dboptions);
@@ -20,13 +19,13 @@ const snowflakeDBConnection = async (dboptions) => {
 };
 
 const getCounts = (processDate, snowConnection, table_name, where) => new Promise((resolve, reject) => {
-  if(where) {
+  if (where) {
     snowConnection.execute({
       sqlText: `
                   SELECT 'MAB_DEMO' CATEGORY,COUNT(*) TOTALCOUNTS
                   FROM ${table_name}
-		  WHERE EXTERNAL_ID IN (${where})
-        `,
+		              WHERE EXTERNAL_ID IN (${where})
+              `,
       complete: (error, stmt, rows) => {
         if (error) {
           logger.log('error', `(Repository/snowflakeC360.getCounts) # Unable to execute query on SNOWFLAKE DB`);
@@ -53,9 +52,9 @@ const getCounts = (processDate, snowConnection, table_name, where) => new Promis
     });
   }
 });
-const fetchHomeStoreUpdates = (processDate, snowConnection, offset, batchSize,  table_name, columns, where) => new Promise(
-  (resolve, reject) => { 
-    if(where) {
+const fetchHomeStoreUpdates = (processDate, snowConnection, offset, batchSize, table_name, columns, where) => new Promise(
+  (resolve, reject) => {
+    if (where) {
       snowConnection.execute({
         sqlText: `
                   SELECT ${columns}

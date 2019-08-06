@@ -18,19 +18,24 @@ const upsertUserBatch = async (customers, iBatch, iBrazeThread) => {
 
   const responseFromBRAZE = await axios.post(url, payLoad, config)
     .catch(error => {
-      const { response = null } = error;
-      const { data = null } = response;
+      const {
+        response = null
+      } = error;
+      const {
+        data = null
+      } = response;
       logger.log('error', `(Repository/braze-emergency-caf.upsertUserBatch) # error inserting into braze ...BATCH ${iBatch} THREAD ${iBrazeThread}...${JSON.stringify(data)} ########### ${JSON.stringify(customers.map(doc => doc.external_id))}`);
     });
-  const { data } = responseFromBRAZE || null;
+  const {
+    data
+  } = responseFromBRAZE || null;
   logger.log('info', `(Repository/braze-emergency-caf.upsertUserBatch) # inserted into braze BATCH ${iBatch} THREAD ${iBrazeThread}...### ${JSON.stringify(data)} `);
   return data;
 };
 const updateHomeStore = (documents, iBatch) => {
   logger.log('info', `(Repository/braze-emergency-caf.updateCustomerEmergencyCAF) # loadToBraze entered with  batch ${iBatch}...${documents.length} `);
   const transactions = [];
-  for (let iBrazeThread = 0; iBrazeThread < Math.ceil(documents.length / iBrazeBatchSize);
-    iBrazeThread++) {
+  for (let iBrazeThread = 0; iBrazeThread < Math.ceil(documents.length / iBrazeBatchSize); iBrazeThread++) {
     const brazePayLoad = documents.slice(iBrazeThread * iBrazeBatchSize,
       iBrazeThread * iBrazeBatchSize + iBrazeBatchSize);
     transactions.push(upsertUserBatch(brazePayLoad, iBatch, iBrazeThread));
